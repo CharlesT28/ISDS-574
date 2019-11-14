@@ -96,3 +96,5 @@ yhat1 = predict(fit, newdata = new_data[id.test, ])
 rmse(new_data[id.test, 'price'], yhat1)
 
 summary(fit)
+
+# Hi whats up
