@@ -104,10 +104,13 @@ summary(pfit)
 
 #### KNN
 
-Xtrain = new_data[id.train,2:ncol(new_data)]
-Xtest = new_data[id.test,2:ncol(new_data)]
-ytrain = new_data[id.train,1]
-ytest = new_data[id.test,1]
+training_data = new_data[id.train, ]
+testing_data = new_data[id.test, ]
+
+Xtrain = training_data[,names(training_data) != "logprice"]
+Xtest = testing_data[,names(testing_data) != "logprice"]
+ytrain = new_data[id.train,6]
+ytest = new_data[id.test,6]
 
 library(FNN)
 one.pred = function(xnew, xtrain, ytrain, k, algorithm) {
@@ -132,7 +135,7 @@ knn.predict.bestK = function(Xtrain, ytrain, Xtest, ytest, k.grid = 1:20, algori
   return(out)
 }
 
-obj = knn.predict.bestK(Xtrain, ytrain, Xtest, ytest, k.grid = 1:18) 
+obj = knn.predict.bestK(Xtrain, ytrain, Xtest, ytest, k.grid = 1:11) 
 obj
 
 yhat = knn.predict(Xtrain, ytrain, Xtest, k = obj$k.optimal)
@@ -145,6 +148,4 @@ myRMSE = function(yhat.vec, ytest.vec) {
   return(rmse)
 }
 
-myRMSE(yhat, ytest)
-
-
+myRMSE(exp(yhat), exp(ytest))
