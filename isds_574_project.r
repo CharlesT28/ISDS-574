@@ -135,10 +135,11 @@ knn.predict.bestK = function(Xtrain, ytrain, Xtest, ytest, k.grid = 1:20, algori
   return(out)
 }
 
-obj = knn.predict.bestK(Xtrain, ytrain, Xtest, ytest, k.grid = 1:11) 
-obj
+#obj = knn.predict.bestK(Xtrain, ytrain, Xtest, ytest, k.grid = 1:11) 
+#obj
 
-yhat = knn.predict(Xtrain, ytrain, Xtest, k = obj$k.optimal)
+yhat = knn.predict(Xtrain, ytrain, Xtest, k = 6)
+
 plot(ytest, yhat)
 
 myRMSE = function(yhat.vec, ytest.vec) {
