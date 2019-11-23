@@ -82,7 +82,7 @@ rmse(exp(new_data[id.test, 'logprice']), exp(yhat3))
 library(rpart)
 library(rpart.plot)
 
-fit = rpart(logprice ~ ., method="anova", data=new_data)
+fit = rpart(logprice ~ ., method="anova", data=new_data[id.train, ])
 
 yhat1 = predict(fit, newdata = new_data[id.test, ])
 
