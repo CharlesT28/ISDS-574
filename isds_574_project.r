@@ -107,8 +107,8 @@ summary(pfit)
 training_data = new_data[id.train, ]
 testing_data = new_data[id.test, ]
 
-Xtrain = training_data[,names(training_data) != "logprice"]
-Xtest = testing_data[,names(testing_data) != "logprice"]
+Xtrain = scale(training_data[,names(training_data) != "logprice"])
+Xtest = scale(testing_data[,names(testing_data) != "logprice"])
 ytrain = new_data[id.train,6]
 ytest = new_data[id.test,6]
 
@@ -123,10 +123,11 @@ knn.predict = function(Xtrain, ytrain, Xtest, k=5, algorithm = 'kd_tree') {
   return(ypred)
 }
 library(dplyr)
-knn.predict.bestK = function(Xtrain, ytrain, Xtest, ytest, k.grid = 1:20, algorithm='kd_tree') {
+
+knn.predict.bestK = function(Xtrain, ytrain, Xtest, ytest, k.grid = 1:11, algorithm='kd_tree') {
   fun.tmp = function(x) {
     yhat = knn.predict(Xtrain, ytrain, Xtest, k = x, algorithm=algorithm) # run knn for each k in k.grid
-    rmse = (yhat - ytest)^2 %>% mean() %>% sqrt()
+    rmse = (exp(yhat) - exp(ytest))^2 %>% mean() %>% sqrt()
     return(rmse)
   }
   ## create a temporary function (fun.tmp) that we want to apply to each value in k.grid
@@ -134,11 +135,11 @@ knn.predict.bestK = function(Xtrain, ytrain, Xtest, ytest, k.grid = 1:20, algori
   out = list(k.optimal = k.grid[which.min(error)], error.min = min(error))
   return(out)
 }
+    
+obj = knn.predict.bestK(Xtrain, ytrain, Xtest, ytest, k.grid = 1:11) 
+obj
 
-#obj = knn.predict.bestK(Xtrain, ytrain, Xtest, ytest, k.grid = 1:11) 
-#obj
-
-yhat = knn.predict(Xtrain, ytrain, Xtest, k = 6)
+yhat = knn.predict(Xtrain, ytrain, Xtest, k = obj$k.optimal)
 
 plot(ytest, yhat)
 
@@ -149,4 +150,4 @@ myRMSE = function(yhat.vec, ytest.vec) {
   return(rmse)
 }
 
-myRMSE(exp(yhat), exp(ytest))
+myRMSE(exp(yhat),exp(ytest))
