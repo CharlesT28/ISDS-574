@@ -2,7 +2,7 @@ rm(list=ls()); gc()
 
 setwd('C:/Users/charlesturner/Downloads')
 
-dat = read.csv('final dataset.csv', head=T, stringsAsFactors=F)  
+dat = read.csv('final dataset.csv', head=T, stringsAsFactors=F) 
 
 new_data = dat[,!(names(dat) %in% c('X','price','id','name','host_id','host_name','latitude','longitude','last_review'))]
 
@@ -112,7 +112,6 @@ Xtest = scale(testing_data[,names(testing_data) != "logprice"])
 ytrain = new_data[id.train,6]
 ytest = new_data[id.test,6]
 
-
 library(FNN)
 one.pred = function(xnew, xtrain, ytrain, k, algorithm) {
   ind = knnx.index(xtrain, matrix(xnew, 1), k=k, algorithm=algorithm)
@@ -124,6 +123,7 @@ knn.predict = function(Xtrain, ytrain, Xtest, k=5, algorithm = 'kd_tree') {
   return(ypred)
 }
 library(dplyr)
+
 knn.predict.bestK = function(Xtrain, ytrain, Xtest, ytest, k.grid = 1:11, algorithm='kd_tree') {
   fun.tmp = function(x) {
     yhat = knn.predict(Xtrain, ytrain, Xtest, k = x, algorithm=algorithm) # run knn for each k in k.grid
@@ -135,7 +135,7 @@ knn.predict.bestK = function(Xtrain, ytrain, Xtest, ytest, k.grid = 1:11, algori
   out = list(k.optimal = k.grid[which.min(error)], error.min = min(error))
   return(out)
 }
-
+    
 obj = knn.predict.bestK(Xtrain, ytrain, Xtest, ytest, k.grid = 1:11) 
 obj
 
