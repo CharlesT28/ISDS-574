@@ -2,7 +2,7 @@ rm(list=ls()); gc()
 
 setwd('C:/Users/charlesturner/Downloads')
 
-dat = read.csv('final dataset.csv', head=T, stringsAsFactors=F) 
+dat = read.csv('final dataset.csv', head=T, stringsAsFactors=F)  
 
 new_data = dat[,!(names(dat) %in% c('X','price','id','name','host_id','host_name','latitude','longitude','last_review'))]
 
@@ -127,7 +127,7 @@ library(dplyr)
 knn.predict.bestK = function(Xtrain, ytrain, Xtest, ytest, k.grid = 1:11, algorithm='kd_tree') {
   fun.tmp = function(x) {
     yhat = knn.predict(Xtrain, ytrain, Xtest, k = x, algorithm=algorithm) # run knn for each k in k.grid
-    rmse = (yhat - ytest)^2 %>% mean() %>% sqrt()
+    rmse = (exp(yhat) - exp(ytest))^2 %>% mean() %>% sqrt()
     return(rmse)
   }
   ## create a temporary function (fun.tmp) that we want to apply to each value in k.grid
@@ -143,9 +143,6 @@ yhat = knn.predict(Xtrain, ytrain, Xtest, k = obj$k.optimal)
 
 plot(ytest, yhat)
 
-
-
-
 myRMSE = function(yhat.vec, ytest.vec) {
   er = yhat.vec - ytest.vec
   ntest = length(er)
@@ -153,4 +150,4 @@ myRMSE = function(yhat.vec, ytest.vec) {
   return(rmse)
 }
 
-myRMSE(exp(yhat), exp(ytest))
+myRMSE(exp(yhat),exp(ytest))
