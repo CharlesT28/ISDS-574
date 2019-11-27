@@ -2,6 +2,8 @@ rm(list=ls()); gc()
 
 setwd('C:/Users/charlesturner/Downloads')
 
+library(jtools)
+
 dat = read.csv('final dataset.csv', head=T, stringsAsFactors=F) 
 
 new_data = dat[,!(names(dat) %in% c('X','price','id','name','host_id','host_name','latitude','longitude','last_review'))]
@@ -52,13 +54,13 @@ obj.null = lm(logprice ~ 1, dat = new_data[id.train, ])
 obj.full = lm(logprice ~ ., dat = new_data[id.train, ]) 
 
 obj1 = step(obj.null, scope=list(lower=obj.null, upper=obj.full), direction='forward')
-summary(obj1) 
+summ(obj1) 
 
 obj2 = step(obj.full, scope=list(lower=obj.null, upper=obj.full), direction='backward')
-summary(obj2) 
+summ(obj2) 
 
 obj3 = step(obj.null, scope=list(lower=obj.null, upper=obj.full), direction='both') 
-summary(obj3)
+summ(obj3)
 
 library(leaps)
 obj4 = regsubsets(logprice ~ ., data = new_data[id.train, ], nvmax=20)
